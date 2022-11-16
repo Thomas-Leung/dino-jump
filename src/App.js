@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 // import * as tf from '@tensorflow/tfjs';
 import '@tensorflow/tfjs-backend-webgl';
 import * as mpPose from '@mediapipe/pose';
@@ -10,6 +10,9 @@ function App() {
   let detector;
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
+  const [jumpCount, setJumpCount] = useState(0);
+  const [isSquat, setIsSquat] = useState(false);
+  const [squatCount, setSquatCount] = useState(0);
   let ctx = null;
 
   const width = 640;
@@ -19,9 +22,21 @@ function App() {
     init();
   }, [videoRef]);
 
+  // When isSquat changed, this will triggered
+  useEffect(() => {
+    if (isSquat) {
+      setSquatCount(function (prevCount) {
+        return prevCount + 1;
+      });
+    }
+  }, [isSquat]);
+
   const init = async () => {
     setupCamera();
     detector = await createDetector();
+    // setInterval(() => {
+    //   renderResult()
+    // }, 5000);
     renderResult();
   };
 
@@ -121,7 +136,25 @@ function App() {
     }
     drawCanvas();
     drawResults(poses);
+    if (poses.length > 0) {
+      // only one person so get the first pose
+      processResult(poses[0].keypoints);
+    }
     requestAnimationFrame(renderResult);
+  };
+
+  const processResult = (keypoints) => {
+    // 11 and 13 are based on COCO Keypoints
+    let leftHip = keypoints[11];
+    let leftKnee = keypoints[13];
+    if (leftKnee.score > 0.6 && leftHip.score > 0.6) {
+      // 80 is just an arbitrary threshold
+      if (leftKnee.y - leftHip.y < 80) {
+        setIsSquat(true);
+      } else {
+        setIsSquat(false);
+      }
+    }
   };
 
   /**
@@ -141,11 +174,13 @@ function App() {
   const drawResult = (pose) => {
     if (pose.keypoints != null) {
       drawKeypoints(pose.keypoints);
-      drawSkeleton(pose.keypoints, pose.id);
+      drawSkeleton(pose.keypoints);
     }
   };
 
   const drawKeypoints = (keypoints) => {
+    // It returns left, middle, and right of the COCO Keypoints
+    // Ref: https://github.com/tensorflow/tfjs-models/tree/master/pose-detection#example-code-and-demos
     const keypointInd = posedetection.util.getKeypointIndexBySide(
       posedetection.SupportedModels.MoveNet
     );
@@ -185,8 +220,7 @@ function App() {
    * Draw the skeleton of a body on the video.
    * @param keypoints A list of keypoints.
    */
-  const drawSkeleton = (keypoints, poseId) => {
-    // Each poseId is mapped to a color in the color palette.
+  const drawSkeleton = (keypoints) => {
     const color = 'White';
     ctx.fillStyle = color;
     ctx.strokeStyle = color;
@@ -219,7 +253,10 @@ function App() {
           className="canvas-wrapper"
           style={{ width: '640px', height: '480px' }}
         >
-          <h1>hi</h1>
+          <h1>
+            Is Squat? {isSquat ? 'True' : 'False'}, Total: {squatCount}
+          </h1>
+          <button onClick={() => setSquatCount(squatCount + 1)}>Switch</button>
           <canvas ref={canvasRef} />
           <video
             // onCanPlay={() => drawCanvas()}
