@@ -72,3 +72,11 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 ## Reference:
 - https://itnext.io/accessing-the-webcam-with-javascript-and-react-33cbe92f49cb
 - https://github.com/tensorflow/tfjs-models/tree/master/pose-detection/demos/live_video
+- https://www.youtube.com/watch?v=47eXVRJKdkU
+
+## TODO
+- Game
+- Jump
+- Connect everything together
+- UI
+- Loading screen

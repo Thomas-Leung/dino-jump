@@ -4,6 +4,7 @@ import '@tensorflow/tfjs-backend-webgl';
 import * as mpPose from '@mediapipe/pose';
 import * as posedetection from '@tensorflow-models/pose-detection';
 import './App.css';
+import Game from './dino-game/Game';
 
 function App() {
   // camera: {targetFPS: 60, sizeOption: '640 X 480'},
@@ -18,27 +19,27 @@ function App() {
   const width = 640;
   const height = 480;
 
-  useEffect(() => {
-    init();
-  }, [videoRef]);
+  // useEffect(() => {
+  //   init();
+  // }, [videoRef]);
 
-  // When isSquat changed, this will triggered
-  useEffect(() => {
-    if (isSquat) {
-      setSquatCount(function (prevCount) {
-        return prevCount + 1;
-      });
-    }
-  }, [isSquat]);
+  // // When isSquat changed, this will triggered
+  // useEffect(() => {
+  //   if (isSquat) {
+  //     setSquatCount(function (prevCount) {
+  //       return prevCount + 1;
+  //     });
+  //   }
+  // }, [isSquat]);
 
-  const init = async () => {
-    setupCamera();
-    detector = await createDetector();
-    // setInterval(() => {
-    //   renderResult()
-    // }, 5000);
-    renderResult();
-  };
+  // const init = async () => {
+  //   setupCamera();
+  //   detector = await createDetector();
+  //   // setInterval(() => {
+  //   //   renderResult()
+  //   // }, 5000);
+  //   renderResult();
+  // };
 
   const setupCamera = async () => {
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
@@ -140,7 +141,7 @@ function App() {
       // only one person so get the first pose
       processResult(poses[0].keypoints);
     }
-    requestAnimationFrame(renderResult);
+    // requestAnimationFrame(renderResult);
   };
 
   const processResult = (keypoints) => {
@@ -249,7 +250,8 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <div
+        <Game/>
+        {/* <div
           className="canvas-wrapper"
           style={{ width: '640px', height: '480px' }}
         >
@@ -269,7 +271,7 @@ function App() {
               height: '0',
             }}
           />
-        </div>
+        </div> */}
       </header>
     </div>
   );
