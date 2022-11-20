@@ -4,6 +4,7 @@ import ground from '../assets/ground.png';
 import dinoStationary from '../assets/dino-stationary.png';
 import { setupGround, updateGround } from './ground';
 import { setupDino, updateDino } from './dino';
+import { setupCactus, updateCactus } from './cactus';
 
 function Game() {
   const worldRef = useRef(null);
@@ -31,6 +32,7 @@ function Game() {
     setupGround();
     setupDino();
     setStart(true);
+    setupCactus();
 
     requestAnimationFrame(update);
   }
@@ -53,6 +55,7 @@ function Game() {
 
     updateGround(delta, speedScale);
     updateDino(delta, speedScale);
+    updateCactus(delta, speedScale);
     updateSpeedScale(delta);
     updateScore(delta);
 
@@ -77,7 +80,7 @@ function Game() {
   }
 
   return (
-    <div className={styles.world} ref={worldRef}>
+    <div className={styles.world} ref={worldRef} data-world>
       <div className={styles.score} ref={scoreElem}>
         0
       </div>
