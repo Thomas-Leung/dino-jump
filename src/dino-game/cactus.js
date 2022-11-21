@@ -13,6 +13,7 @@ const CACTUS_INTERVAL_MAX = 2000;
 let nextCactusTime;
 export function setupCactus() {
   nextCactusTime = CACTUS_INTERVAL_MIN;
+  // remove all cactus when game restarts
   document.querySelectorAll("[data-cactus]").forEach((cactus) => {
     cactus.remove();
   });
@@ -35,7 +36,9 @@ export function updateCactus(delta, speedScale) {
   nextCactusTime -= delta;
 }
 
+// Create a rectangle around the cactus to detect collision
 export function getCactusRects() {
+  // ... is a spread operator to let us use map
   return [...document.querySelectorAll("[data-cactus]")].map((cactus) => {
     return cactus.getBoundingClientRect();
   });
@@ -51,8 +54,8 @@ function createCactus() {
   //   left: calc(var(--left) * 1%);
   //   height: 30%;
   //   bottom: 0;
-    // cactus.classList.add("cactus");
-  
+  // cactus.classList.add("cactus");
+
   cactus.style.position = "absolute";
   cactus.style.left = "calc(var(--left) * 1%)"
   cactus.style.height = "30%"

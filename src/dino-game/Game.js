@@ -3,8 +3,8 @@ import styles from './game.module.css';
 import ground from '../assets/ground.png';
 import dinoStationary from '../assets/dino-stationary.png';
 import { setupGround, updateGround } from './ground';
-import { setupDino, updateDino } from './dino';
-import { setupCactus, updateCactus } from './cactus';
+import { getDinoRect, setDinoLose, setupDino, updateDino } from './dino';
+import { getCactusRects, setupCactus, updateCactus } from './cactus';
 
 function Game() {
   const worldRef = useRef(null);
@@ -58,6 +58,9 @@ function Game() {
     updateCactus(delta, speedScale);
     updateSpeedScale(delta);
     updateScore(delta);
+    if (checkLose()) {
+      return handleLose();
+    }
 
     lastTime = time;
     requestAnimationFrame(update);
@@ -65,6 +68,29 @@ function Game() {
 
   function updateSpeedScale(delta) {
     speedScale += delta * SPEED_SCALE_INCREASE;
+  }
+
+  function checkLose() {
+    const dinoRect = getDinoRect();
+    return getCactusRects().some((rect) => isCollision(rect, dinoRect));
+  }
+
+  function isCollision(rect1, rect2) {
+    return (
+      rect1.left < rect2.right &&
+      rect1.top < rect2.bottom &&
+      rect1.right > rect2.left &&
+      rect1.bottom > rect2.top
+    );
+  }
+
+  function handleLose() {
+    setDinoLose();
+    // give a bit of buffer to avoid accenditally start a game again
+    setTimeout(() => {
+      document.addEventListener("keydown", handleStart, { once: true });
+      setStart(false)
+    }, 100);
   }
 
   function setPixelToWorldScale() {

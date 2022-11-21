@@ -1,6 +1,7 @@
 import dinoStationary from "../assets/dino-stationary.png";
 import dinoRun0 from "../assets/dino-run-0.png";
 import dinoRun1 from "../assets/dino-run-1.png";
+import dinoLoseImg from "../assets/dino-lose.png";
 import {
   incrementCustomProperty,
   setCustomProperty,
@@ -34,6 +35,16 @@ export function setupDino() {
 export function updateDino(delta, speedScale) {
   handleRun(delta, speedScale);
   handleJump(delta);
+}
+
+export function getDinoRect() {
+  const dinoElem = document.querySelector("[data-dino]");
+  return dinoElem.getBoundingClientRect();
+}
+
+export function setDinoLose() {
+  const dinoElem = document.querySelector("[data-dino]");
+  dinoElem.src = dinoLoseImg;
 }
 
 function handleRun(delta, speedScale) {
