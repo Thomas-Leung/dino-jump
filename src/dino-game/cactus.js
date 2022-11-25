@@ -7,8 +7,8 @@ import {
 } from "./updateCustomerProperty.js";
 
 const SPEED = 0.05;
-const CACTUS_INTERVAL_MIN = 500;
-const CACTUS_INTERVAL_MAX = 2000;
+const CACTUS_INTERVAL_MIN = 2000;
+const CACTUS_INTERVAL_MAX = 6000;
 
 let nextCactusTime;
 export function setupCactus() {
@@ -58,7 +58,7 @@ function createCactus() {
 
   cactus.style.position = "absolute";
   cactus.style.left = "calc(var(--left) * 1%)"
-  cactus.style.height = "30%"
+  cactus.style.height = "20%"
   cactus.style.bottom = 0;
   console.log(cactus);
   setCustomProperty(cactus, "--left", 100);

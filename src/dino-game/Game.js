@@ -10,7 +10,7 @@ function Game() {
   const worldRef = useRef(null);
   const scoreElem = useRef(null);
   const WORLD_WIDTH = 100;
-  const WORLD_HEIGHT = 30;
+  const WORLD_HEIGHT = 35;
   const SPEED_SCALE_INCREASE = 0.00001;
   const [start, setStart] = useState(false);
 

@@ -71,7 +71,7 @@ function handleJump(delta) {
   if (!isJumping) return;
 
   // yVelocity will get lower and lower to move the dino down
-  incrementCustomProperty(dinoElem, "--bottom", yVelocity * delta);
+  incrementCustomProperty(dinoElem, "--bottom", yVelocity * 12);
 
   if (getCustomProperty(dinoElem, "--bottom") <= 0) {
     // dino already back or even lower than ground level, so we set to 0 and false
