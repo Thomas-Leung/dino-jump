@@ -73,6 +73,8 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 - https://itnext.io/accessing-the-webcam-with-javascript-and-react-33cbe92f49cb
 - https://github.com/tensorflow/tfjs-models/tree/master/pose-detection/demos/live_video
 - https://www.youtube.com/watch?v=47eXVRJKdkU
+- https://github.com/tensorflow/tfjs-models/tree/master/pose-detection
+- https://towardsdatascience.com/playing-chromes-dino-game-by-physically-jumping-and-crouching-a3d319234727
 
 ## TODO
 - Game

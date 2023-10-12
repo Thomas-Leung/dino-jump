@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-// import * as tf from '@tensorflow/tfjs';
 import '@tensorflow/tfjs-backend-webgl';
-import * as mpPose from '@mediapipe/pose';
+import * as mpPose from '@mediapipe/pose'; // eslint-disable-line no-unused-vars
 import * as posedetection from '@tensorflow-models/pose-detection';
 import './App.css';
 import Game from './dino-game/Game';
+import Dino from './dino-game2/dino';
 
 function App() {
   // camera: {targetFPS: 60, sizeOption: '640 X 480'},
@@ -13,6 +13,7 @@ function App() {
   const canvasRef = useRef(null);
   const [jumpCount, setJumpCount] = useState(0);
   const [isSquat, setIsSquat] = useState(false);
+  const [isJump, setIsJump] = useState(false);
   const [squatCount, setSquatCount] = useState(0);
   let ctx = null;
 
@@ -31,6 +32,14 @@ function App() {
   //     });
   //   }
   // }, [isSquat]);
+
+  // useEffect(() => {
+  //   if (isJump) {
+  //     setJumpCount(function (prevCount) {
+  //       return prevCount + 1;
+  //     });
+  //   }
+  // }, [isJump]);
 
   // const init = async () => {
   //   setupCamera();
@@ -145,6 +154,40 @@ function App() {
   };
 
   const processResult = (keypoints) => {
+    // processSquat(keypoints);
+    processJump(keypoints);
+  };
+
+  const processJump = (keypoints) => {
+    let leftHip = keypoints[11];
+    let rightHip = keypoints[12];
+    let hip;
+    if (leftHip && !rightHip) {
+      hip = leftHip;
+    } else if (rightHip && !leftHip) {
+      hip = rightHip;
+    } else {
+      if (leftHip.score > rightHip.score) {
+        hip = leftHip;
+      } else {
+        hip = rightHip;
+      }
+    }
+
+    if (!hip || hip.scale < 0.6) {
+      // no hip found
+      return;
+    }
+
+    let height = videoRef.current.height
+    let position = height - hip.y;
+
+    if (position > height * 0.5) {
+      console.log("HOHOHOHOHOHOHOHOHOHOHOHOHOHOH")
+    }
+  };
+
+  const processSquat = (keypoints) => {
     // 11 and 13 are based on COCO Keypoints
     let leftHip = keypoints[11];
     let leftKnee = keypoints[13];
@@ -250,13 +293,14 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <Game/>
+        <Dino/>
+        {/* <Game/> */}
         {/* <div
           className="canvas-wrapper"
           style={{ width: '640px', height: '480px' }}
         >
           <h1>
-            Is Squat? {isSquat ? 'True' : 'False'}, Total: {squatCount}
+            Is Jump? {isJump ? 'True' : 'False'}, Total: {jumpCount}
           </h1>
           <button onClick={() => setSquatCount(squatCount + 1)}>Switch</button>
           <canvas ref={canvasRef} />
